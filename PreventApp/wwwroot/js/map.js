@@ -15,6 +15,11 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
+//Obtener coordenadas al hacer click
+/*map.on('click', function (e) {
+    alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+});*/
+
 L.marker([20.6696, -103.3405]).bindPopup("<b>Categoría</b><br><br>bla bla blalalala bala balaa").addTo(map);
 
 L.marker([20.6896, -103.3263]).bindPopup("<b>Categoría</b><br><br>bla bla blalalala bala balaa").addTo(map);
