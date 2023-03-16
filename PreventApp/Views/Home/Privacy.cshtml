@@ -1,6 +1,64 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Acceder a cuenta";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div id="fondo"></div>
+
+<header id="panel">
+    <partial name="_Navbar" />
+</header>
+
+<div id="login-register" class="login-register">
+    <div class="form-box login">
+        <h2 style="text-align:center">Iniciar sesión</h2>
+        <form>
+            <div class="input-box">
+                <i class="bi bi-envelope"></i>
+                <input type="email" required placeholder=" " />
+                <label>Correo electrónico</label>
+            </div>
+            <div class="input-box">
+                <i class="bi bi-lock"></i>
+                <input type="password" required placeholder=" " />
+                <label>Contraseña</label>
+            </div>
+            <button type="submit" class="btn">Iniciar sesión</button>
+            <div class="pText">
+                <p>
+                    No tienes una cuenta?
+                    <a class="register-link" href="#">Registrate</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-box register">
+        <h2 style="text-align:center">Registrarse</h2>
+        <form>
+            <div class="input-box">
+                <i class="bi bi-person"></i>
+                <input type="text" required placeholder=" " />
+                <label>Nombre de usuario</label>
+            </div>
+            <div class="input-box">
+                <i class="bi bi-envelope"></i>
+                <input type="email" required placeholder=" " />
+                <label>Correo electrónico</label>
+            </div>
+            <div class="input-box">
+                <i class="bi bi-lock"></i>
+                <input type="password" required placeholder=" " />
+                <label>Contraseña</label>
+            </div>
+            <button type="submit" class="btn">Registrarse</button>
+            <div class="pText">
+                <p>
+                    Ya tienes una cuenta?
+                    <a class="login-link" href="#">Iniciar sesión</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/formLogin.js"></script>
