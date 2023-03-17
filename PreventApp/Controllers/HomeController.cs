@@ -18,7 +18,12 @@ namespace PreventApp.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult AddAlert()
         {
             return View();
         }
