@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PreventApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PreventApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+</head>
+<body>
+    <header style="position: fixed; z-index: 1; width: 100%; background-color: #343636;">
+        <partial name="_Navbar" />
+    </header>
+
+    <partial name="_UserMenu"/>
+
+    <input type="checkbox" id="check" />
+    <div id="darkdiv2" onclick="CloseMenu()"></div>
+    <label for="check">
+        <i class="bi bi-list" id="sidemenu-button"></i>
+    </label>
+
+    <div id="sidemenu">
+
+        <div style="min-width: 230px">
+            <label id="acc">ACCIDENTES</label>
+
+            <a asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="todos"> 
+                <i class="bi bi-card-list" style="font-size: 16px"></i>
+                <span>Todos</span> 
+            </a>
+
+            <a asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="trafico"> 
+                <i class="bi bi-car-front-fill" style="font-size: 16px"></i>
+                <span>Accidentes de tráfico</span> 
+            </a>
+
+            <a asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="incendios"> 
+                <i class="bi bi-fire" style="font-size: 16px"></i> 
+                <span>Incendios</span> 
+            </a>
+
+            <a asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="robos">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 448 512"> <path d="M224 256c-57.2 0-105.6-37.5-122-89.3c-1.1 1.3-2.2 2.6-3.5 3.8c-15.8 15.8-38.8 20.7-53.6 22.1c-8.1 .8-14.6-5.7-13.8-13.8c1.4-14.7 6.3-37.8 22.1-53.6c5.8-5.8 12.6-10.1 19.6-13.4c-7-3.2-13.8-7.6-19.6-13.4C37.4 82.7 32.6 59.7 31.1 44.9c-.8-8.1 5.7-14.6 13.8-13.8c14.7 1.4 37.8 6.3 53.6 22.1c4.8 4.8 8.7 10.4 11.7 16.1C131.4 28.2 174.4 0 224 0c70.7 0 128 57.3 128 128s-57.3 128-128 128zM0 482.3C0 399.5 56.4 330 132.8 309.9c6-1.6 12.2 .9 15.9 5.8l62.5 83.3c6.4 8.5 19.2 8.5 25.6 0l62.5-83.3c3.7-4.9 9.9-7.4 15.9-5.8C391.6 330 448 399.5 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM160 96c-8.8 0-16 7.2-16 16s7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H160z" /></svg>
+                <span>Robos</span>
+            </a>
+
+            <a asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="fallecimientos">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 512 512"> <path d="M416 398.9c58.5-41.1 96-104.1 96-174.9C512 100.3 397.4 0 256 0S0 100.3 0 224c0 70.7 37.5 133.8 96 174.9c0 .4 0 .7 0 1.1v64c0 26.5 21.5 48 48 48h48V464c0-8.8 7.2-16 16-16s16 7.2 16 16v48h64V464c0-8.8 7.2-16 16-16s16 7.2 16 16v48h48c26.5 0 48-21.5 48-48V400c0-.4 0-.7 0-1.1zM96 256a64 64 0 1 1 128 0A64 64 0 1 1 96 256zm256-64a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" /></svg>
+                <span>Fallecimientos</span>
+            </a>
+        </div>
+        <div style="min-width: 230px">
+            <label id="cuenta-label">CUENTAS DE USUARIO</label>
+
+            <a asp-controller="Dashboard" asp-action="Users" asp-route-filtro="todos"> 
+                <i class="bi bi-people" style="font-size: 16px"></i>
+                <span>Todos</span> 
+            </a>
+
+            <a asp-controller="Dashboard" asp-action="Users" asp-route-filtro="administradores"> 
+                <i class="bi bi-person-lock" style="font-size: 16px"></i>
+                <span>Administradores</span> 
+            </a>
+
+            <a asp-controller="Dashboard" asp-action="Users" asp-route-filtro="instituciones">
+                <i class="bi bi-bank" style="font-size: 16px"></i>
+                <span>Instituciones</span>
+            </a>
+
+            <a asp-controller="Dashboard" asp-action="Users" asp-route-filtro="usuarios"> 
+                <i class="bi bi-person" style="font-size: 16px"></i>
+                <span>Usuarios</span> 
+            </a>
+        </div>
+    
+    </div>
+
+    <div id="contenido">
+        <main role="main" style="color: white;">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function CloseMenu() {
+            document.getElementById("check").checked = false;
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,52 @@
+﻿
+@if (User.Identity is not null)
+{
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <a id="login-button" class="nav-link btn" asp-controller="Sesion" asp-action="Login">Iniciar sesión</a>
+    }
+    else
+    {
+        <div id="menuUser" onclick="displayOptions()">
+            <i class="bi bi-person-circle" style="font-size: 23px;"></i>
+            <div id="popupOptions">
+                <div id="user">
+                    <i class="bi bi-person-circle" style="font-size: 23px;"></i>
+                    @User.Identity.Name
+                </div>
+                <hr style="color: white" />
+                <a id="dropmenu" class="nav-link" asp-controller="Home" asp-action="Profile">
+                    <i class="bi bi-person"></i>
+                        &nbsp; Tu perfil
+                </a>
+                @*@if (User.IsInRole("Usuario"))
+                {*@
+                <a id="dropmenu" class="nav-link" asp-controller="Home" asp-action="UserAlerts">
+                    <i class="bi bi-list-ul"></i>
+                    &nbsp; Tus alertas
+                </a>
+                @*}*@
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a id="dropmenu" class="nav-link" asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="todos">
+                        <i class="bi bi-card-list"></i>
+                        &nbsp; Dashboard
+                    </a>
+                }
+                <hr style="color: white" />
+                <a id="dropmenu" style="margin-bottom: 10px" class="nav-link" asp-controller="Home" asp-action="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    &nbsp; Cerrar sesión
+                </a>
+            </div>
+        </div>
+    }
+}
+    
+
+<script>
+    function displayOptions() {
+        var popup = document.getElementById("popupOptions");
+        popup.classList.toggle("show");
+    }
+</script>

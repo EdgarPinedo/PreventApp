@@ -1,0 +1,70 @@
+﻿@model PreventApp.Models.Accidente
+
+@{
+    ViewData["Title"] = "Detalles";
+    Layout = "_DashboardLayout";
+}
+
+<div id="accidentDetails">
+    <div class="details">
+        <h1>Detalles de accidente</h1>
+        <div class="detTitle">ACCIDENTE</div>
+        <div class="det">
+            <label class="name">Id</label>
+            <label class="value">@Model.Id</label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Fecha</label>
+            <label class="value">@Model.Fecha</label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Descripcion</label>
+            <label class="value">@Model.Descripcion</label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Latitud</label>
+            <label class="value"></label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Longitud</label>
+            <label class="value"></label>
+        </div>
+
+        <div class="detTitle">CATEGORÍA</div>
+        <div class="det">
+            <label class="value" style="font-weight: bold;">
+                @Model.Categoria.Nombre
+            </label>
+        </div>
+
+        @if (Model.Usuario is not null)
+        {
+            <div class="detTitle">USUARIO</div>
+            <div class="det">
+                <label class="name">Id</label>
+                <label class="value">@Model.Usuario.Id</label>
+            </div>
+            <hr />
+            <div class="det">
+                <label class="name">Email</label>
+                <label class="value">@Model.Usuario.Email</label>
+            </div>
+        }
+        else
+        {
+            <div class="detTitle">ORIGEN</div>
+            <div class="det">
+                <label class="name">From Twitter</label>
+            </div>
+        }
+
+        <div id="actionsDetails">
+            <a class="buttons" asp-action="EditAccident" asp-route-id="@Model.Id">Editar</a>
+            <a class="buttons" asp-action="Accidentes" asp-route-filtro="todos">Regresar a la lista de accidentes</a>
+        </div>
+    </div>
+</div>

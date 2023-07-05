@@ -1,0 +1,113 @@
+﻿@using PreventApp.DTOs
+@model AccidenteDTO
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_DashboardLayout";
+}
+
+<style>
+    #accidentDetails {
+        flex-direction: row;
+    }
+
+    #accidentDetails .details {
+        border-bottom-left-radius: 0px;
+        border-top-left-radius: 0px;
+        width: 50%;
+    }
+</style>
+
+<style type="text/css" media="(max-width: 1320px)">
+    #accidentDetails {
+        flex-direction: column;
+    }
+
+    #accidentDetails .mapa {
+        height: 400px;
+        width: 80%;
+        border-bottom-left-radius: 0px;
+        border-top-right-radius: 20px;
+    }
+
+    #accidentDetails .details {
+        border-bottom-left-radius: 20px;
+        border-top-right-radius: 0px;
+        width: 80%;
+    }
+
+    #accidentDetails .details {
+        padding: 20px 10px;
+    }
+</style>
+
+<div id="accidentDetails">
+    <div id="map" class="mapa"></div>
+    <form asp-action="EditAccident" method="post" class="details">
+        <h1>Accidente</h1>
+        <div class="detTitle">ACCIDENTE</div>
+        <div class="det">
+            <label class="name">Fecha</label>
+            <input asp-for="@Model.Fecha" type="hidden" />
+            <input class="valueInput" value="@Model.Fecha" disabled/>
+        </div>
+        <hr />
+        <input asp-for="@Model.UsuarioId" type="hidden"/>
+        <div class="det">
+            <label class="name">Descripcion</label>
+            <textarea class="valueInput textarea" asp-for="@Model.Descripcion" required></textarea>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Latitud</label>
+            <input id="latitud" class="valueInput"/>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Longitud</label>
+            <input id="longitud" class="valueInput"/>
+        </div>
+
+        <div class="detTitle">CATEGORÍA</div>
+        <div class="det">
+            <select class="valueInput select" asp-for="@Model.CategoriaId">
+                <option value="1">Accidente de tráfico</option>
+                <option value="2">Incendio</option>
+                <option value="3">Robo</option>
+                <option value="4">Fallecimiento</option>
+            </select>
+        </div>
+
+        <div id="actionsDetails">
+            <button type="submit" class="buttons">Guardar</button>
+            <a class="buttons" asp-action="Accidentes" asp-route-filtro="todos">Regresar a la lista</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    var mapOptions = {
+        center: [20.6696, -103.3405],
+        zoom: 13,
+        minZoom:12,
+        zoomControl: false,
+        maxBounds: [
+            //Suroeste
+            [20.334647543695734, -103.00506591796875],
+            //Noreste
+            [20.90500300215911, -103.74320983886719]
+        ]
+    }
+
+    var map = L.map('map', mapOptions);
+    L.control.zoom({ position: "bottomright" }).addTo(map);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    map.on('click', function (e) {
+        document.getElementById("latitud").value = e.latlng.lat;
+        document.getElementById("longitud").value = e.latlng.lng;
+    });
+</script>

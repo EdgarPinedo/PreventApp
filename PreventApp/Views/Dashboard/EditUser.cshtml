@@ -1,0 +1,48 @@
+﻿@using PreventApp.DTOs
+@model UserDashboardDTO
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_DashboardLayout";
+}
+
+<div id="accidentDetails">
+    <form asp-action="EditUser" method="post" class="details">
+        <h1>Editar usuario</h1>
+        <div class="detTitle">USUARIO</div>
+        <div class="det">
+            <label class="name">Nombre</label>
+            <input class="valueInput" asp-for="@Model.Nombre" />
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Email</label>
+            <input class="valueInput" asp-for="@Model.Email" required />
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Telefono</label>
+            <input class="valueInput" asp-for="@Model.Telefono"/>
+        </div>
+        <hr />
+        <div class="det pass-container">
+            <label class="name pass">Contraseña (se cifrará después de ser modificada)</label>
+            <input class="valueInput" asp-for="@Model.Contraseña" required />
+        </div>
+        <hr />
+
+        <div class="detTitle">ROL</div>
+        <div class="det">
+            <select class="valueInput select" asp-for="@Model.RolId">
+                <option value="1">Usuario</option>
+                <option value="2">Institución</option>
+                <option value="3">Administrador</option>
+            </select>
+        </div>
+
+        <div id="actionsDetails">
+            <button type="submit" class="buttons">Guardar</button>
+            <a class="buttons" asp-action="Users" asp-route-filtro="todos">Regresar a la lista</a>
+        </div>
+    </form>
+</div>

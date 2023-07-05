@@ -1,0 +1,64 @@
+﻿@using PreventApp.DTOs;
+@model ProfileDTO
+
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<header style="position: fixed; z-index: 1; width: 100%; background-color: #343636;">
+    <partial name="_Navbar" />
+</header>
+
+<partial name="_UserMenu" />
+
+<div id="profile-container">
+    
+    <h1>Mi perfil</h1>
+    <h5>Información sobre ti y tu contacto</h5>
+    
+    <form class="form" method="post" asp-action="Profile">
+        <h3>Información básica</h3>
+
+        <div class="row-data">
+            <label>Nombre</label>
+            <input asp-for="Nombre" />
+        </div>
+
+        <div class="row-data">
+            <label>Telefono</label>
+            <input asp-for="Telefono"/>
+        </div>
+        <span class="text-danger field-validation-valid span" asp-validation-for="Telefono"></span>
+        <div class="validation-state">
+            <button type="submit">Guardar</button>
+            @if (ViewData["Actualizado"] != null)
+            {
+                <span id="Actualizado" class="text-success">@ViewData["Actualizado"]</span>
+            }
+        </div>
+        <input asp-for="Email" type="hidden"/>
+    </form>
+
+    <div class="form">
+        <h3>Información de contacto</h3>
+        <div class="row-email">
+            <label>Email</label>
+            <label>@Model.Email</label>
+        </div>
+    </div>
+
+    <div class="form pass">
+        <h3>Contraseña</h3>
+        <a class="row-pass" href="#">
+            ••••••••
+            <i class="bi bi-chevron-right"></i>
+        </a>
+    </div>
+
+</div>
+
+<script>
+    setTimeout(() => {
+        document.getElementById("Actualizado").style.visibility = "hidden";
+    }, 2000);
+</script>

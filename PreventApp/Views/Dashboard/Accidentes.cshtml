@@ -1,0 +1,125 @@
+﻿@using PreventApp.Services;
+@model Paginacion<Accidente>
+
+@{
+    ViewData["Title"] = "Accidentes";
+    Layout = "_DashboardLayout";
+}
+
+<div id="main-container">
+    <div class="container-2">
+        <h1 style="color: #b7c0ca; margin-bottom: 45px; font-weight:bold">Accidentes</h1>
+        <div class="filtro">@ViewData["filtro"]</div>
+
+        @foreach (var item in Model)
+        {
+            <div id="item-container">
+                <div onclick="GoToDetails(@item.Id)" style="height: 100%">
+                    <div class="item-head">
+                        <div class="left-head">
+                            <div class="status Pendiente">Pendiente</div>
+                            <div>
+                                <h6 class="fecha">@item.Fecha</h6>
+                                @{
+                                    var cat = "";
+                                    if (item.Categoria.Nombre == "Accidente de tráfico")
+                                        cat = "Trafico";
+                                    else
+                                        cat = item.Categoria.Nombre;
+                                }
+                                <h3 class="categoria @cat">@item.Categoria.Nombre</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-body">
+                        <p class="item-content">@item.Descripcion</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a class="actions-button" asp-action="EditAccident" asp-route-id="@item.Id">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <div class="actions-button" onclick="Show(@item.Id)">
+                        <i class="bi bi-trash3"></i>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @{
+            var prevDisabled = !Model.PaginasAnteriores ? "visually-hidden" : "";
+            var nextDisabled = !Model.PaginasSiguientes ? "visually-hidden" : "";
+        }
+
+        <div id="paginacion">
+            <a asp-action="Accidentes" asp-route-filtro="@ViewData["filtro"]" asp-route-numpag="1" class="btn @prevDisabled">
+                <i class="bi bi-chevron-double-left"></i>
+            </a>
+            <a asp-action="Accidentes" asp-route-filtro="@ViewData["filtro"]" asp-route-numpag="@(Model.PaginaActual-1)" class="btn @prevDisabled">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+            @if (Model.PaginasTotales > 1)
+            {
+                var inicio = Model.PaginaActual;
+                var final = Model.PaginasTotales;
+
+                if (Model.PaginasTotales >= 5)
+                {
+                    if (inicio == 1) inicio = 1;
+                    else if (inicio == 2) inicio -= 1;
+                    else if (inicio == Model.PaginasTotales) inicio -= 4;
+                    else if (inicio == (Model.PaginasTotales - 1)) inicio -= 3;
+                    else inicio -= 2;
+
+                    final = inicio + 4;
+                }
+                else
+                    inicio = 1;
+                
+                @for (var i = inicio; i <= final; i++)
+                {
+                    var paginaActiva = (i == Model.PaginaActual) ? "active" : "";
+                    <a asp-action="Accidentes" asp-route-filtro="@ViewData["filtro"]" asp-route-numpag="@i" class="btn @paginaActiva">@i</a>
+                }
+            }
+            <a asp-action="Accidentes" asp-route-filtro="@ViewData["filtro"]" asp-route-numpag="@(Model.PaginaActual+1)" class="btn @nextDisabled">
+                <i class="bi bi-chevron-right"></i>
+            </a>
+            <a asp-action="Accidentes" asp-route-filtro="@ViewData["filtro"]" asp-route-numpag="@Model.PaginasTotales" class="btn @nextDisabled">
+                <i class="bi bi-chevron-double-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div id="darkdiv" class="visually-hidden" onclick="Close()">
+    <form asp-action="DeleteAccident" id="deletepopup" class="">
+        <h5>¿Realmente deseas borrar este registro?</h5>
+        <div class="container-buttons">
+            <input type="hidden" name="id" id="input"/>
+            <input type="submit" value="Borrar" class="btn btn-danger" />
+            <div class="btn btn-dark" onclick="Close()">Cancelar</div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function GoToDetails(id) {
+        window.location.href = '@Url.Action("AccidentDetails", "Dashboard")/' + id
+    }
+
+    function Show(id)
+    {
+        console.log(id);
+        document.getElementById("deletepopup").className = "";
+        document.getElementById("darkdiv").className = "";
+        document.getElementById("input").value = id;
+    }
+
+    function Close() 
+    {
+        document.getElementById("deletepopup").className = "visually-hidden";
+        document.getElementById("darkdiv").className = "visually-hidden";
+    }
+</script>

@@ -1,0 +1,49 @@
+﻿@model List<Accidente>
+
+@{
+    ViewData["Title"] = "Alertas";
+}
+
+<style>
+    #layout-container .left-head {
+        width: 100%;
+        justify-content: space-between;
+    }
+</style>
+
+<header style="position: fixed; z-index: 1; width: 100%; background-color: #343636;">
+    <partial name="_Navbar" />
+</header>
+
+<partial name="_UserMenu" />
+
+<div id="layout-container">
+    <h1>Mis Alertas</h1>
+    @if (Model.Count == 0)
+    {
+        <h4>Aún no has enviado ninguna alerta :(</h4>
+    }
+    <div class="layout">
+        @foreach (var item in Model)
+        {
+            <div id="item-container" style="width: 100%">
+                <div class="item-head">
+                    <div class="left-head">
+                        @{
+                            var cat = "";
+                            if (item.Categoria.Nombre == "Accidente de tráfico")
+                                cat = "Trafico";
+                            else
+                                cat = item.Categoria.Nombre;
+                        }
+                        <h3 class="categoria @cat">@item.Categoria.Nombre</h3>
+                        <h5 class="fecha">@item.Fecha</h5>
+                    </div>
+                </div>
+                <div class="item-body">
+                    <p class="item-content">@item.Descripcion</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

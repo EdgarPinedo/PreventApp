@@ -1,16 +1,18 @@
-﻿@{
+﻿@model List<Accidente>
+
+@{
     ViewData["Title"] = "Inicio";
 }
 
 <style>
     .leaflet-bar a {
-        background-color: rgb(33, 37, 41);
+        background-color: rgb(33, 37, 41, .9);
         color: #16c6ff;
         border-bottom: 1px solid #000;
     }
 
     .leaflet-bar a.leaflet-disabled {
-        background-color: rgb(33, 37, 41);
+        background-color: rgb(33, 37, 41, .9);
     }
 
     .leaflet-bar a:hover, .leaflet-bar a:focus {
@@ -30,20 +32,13 @@
     }
 </style>
 
-<div id="map" style="background-color: #29292a"></div>
+<div id="map" style="background-color: #f2efe9"></div>
 
 <header id="panel">
     <partial name="_Navbar" />
 </header>
 
-<button id="menuUser" onclick="toLogin()">
-    <i class="bi bi-person-circle" style="font-size: 23px; color: #16c6ff;"></i>
-    <div id="popupOptions">
-        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Login">Iniciar sesión</a>
-        <hr style="margin-bottom: 0px; margin-top: 0px" />
-        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Login">Registrarse</a>
-    </div>
-</button>
+<partial name="_UserMenu" />
 
 <div id="nuevaAlerta" onclick="alertaPopup()">
     <i class="bi bi-pencil-square" style="font-size: 17px; color: #16c6ff;"></i>
@@ -77,10 +72,6 @@
 </div>
 
 <script>
-    function toLogin() {
-        var popup = document.getElementById("popupOptions");
-        popup.classList.toggle("show");
-    }
     function alertaPopup() {
         var alerta = document.getElementById("alert-container");
         alerta.classList.toggle('active');
@@ -88,5 +79,8 @@
         document.getElementById("longitud").innerHTML = "";
         document.getElementById("text-a").value = "";
     }
+
+    var model = @Html.Raw(Json.Serialize(@Model));
+    console.log(model);
 </script>
 <script src="~/js/map.js"></script>

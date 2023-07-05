@@ -1,0 +1,48 @@
+﻿@using PreventApp.DTOs;
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+@model UsuarioDTO
+
+<div id="fondo"></div>
+
+<header id="panel" style="background: #0d0f11">
+    <partial name="_Navbar" />
+</header>
+
+<div id="contenedor100">
+    <div id="login-register">
+        <div class="imagelogin"></div>
+        <div class="form-box">
+            <h2 style="text-align:center">Iniciar sesión</h2>
+            <form asp-action="Login" method="post">
+                <div class="input-box">
+                    <i class="bi bi-envelope"></i>
+                    <input asp-for="Email" required placeholder=" " />
+                    <label>Correo electrónico</label>
+                </div>
+                <div class="input-box">
+                    <i class="bi bi-lock"></i>
+                    <input asp-for="Contraseña" required placeholder=" " />
+                    <label>Contraseña</label>
+                </div>
+                @if (ViewData["ValidarLogin"] != null)
+                {
+                    <label class="text-danger" style="margin-bottom: 30px">@ViewData["ValidarLogin"]</label>
+                }
+                <button type="submit" class="btn">Iniciar sesión</button>
+                <div class="pText">
+                    <p>
+                        No tienes una cuenta?
+                        <a asp-action="Registro">Registrate</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    
+
+
+

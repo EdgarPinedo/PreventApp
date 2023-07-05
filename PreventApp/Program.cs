@@ -1,7 +1,25 @@
+global using PreventApp.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using PreventApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<PreventAppDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("Database")));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+{
+    option.LoginPath = "/Sesion/Login";
+    option.AccessDeniedPath = "/Home/Index";
+});
+
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AccidentsService>();
+builder.Services.AddScoped<UsersService>();
+
 
 var app = builder.Build();
 
@@ -17,7 +35,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

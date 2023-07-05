@@ -1,0 +1,51 @@
+﻿@model PreventApp.Models.Usuario
+
+@{
+    ViewData["Title"] = "Detalles";
+    Layout = "_DashboardLayout";
+}
+
+<div id="accidentDetails">
+    <div class="details">
+        <h1>Detalles de usuario</h1>
+        <div class="detTitle">Usuario</div>
+        <div class="det">
+            <label class="name">Id</label>
+            <label class="value">@Model.Id</label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Nombre</label>
+            <label class="value">@Model.Nombre</label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Email</label>
+            <label class="value">@Model.Email</label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Telefono</label>
+            <label class="value">@Model.Telefono</label>
+        </div>
+        <hr />
+        <div class="det">
+            <label class="name">Contraseña</label>
+            <label class="value">@Model.Contraseña</label>
+        </div>
+
+        <div class="detTitle">ROL</div>
+        <div class="det">
+            <label class="value" style="font-weight: bold;">
+                @Model.Rol.Nombre
+            </label>
+        </div>
+
+        @*tabla de accidentes registrados por el usuario*@
+
+        <div id="actionsDetails">
+            <a class="buttons" asp-action="EditUser" asp-route-id="@Model.Id">Editar</a>
+            <a class="buttons" asp-action="Users" asp-route-filtro="todos">Regresar a la lista de usuarios</a>
+        </div>
+    </div>
+</div>

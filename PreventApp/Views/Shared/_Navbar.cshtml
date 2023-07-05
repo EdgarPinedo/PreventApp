@@ -1,8 +1,27 @@
 ﻿
-<nav class="navbar navbar-expand-sm box-shadow">
-    <div class="container-fluid">
-        <a class="navbar-brand" style="color: #16c6ff;" asp-area="" asp-controller="Home" asp-action="Index">
-            <i class="bi bi-map" style="font-size: 20px;"></i>
-            PreventApp</a>
-    </div>
+<style>
+    .nav-container {
+        display: flex;
+        align-items: center;
+        height: 52px;
+        padding-left: 20px;
+        padding-bottom: 7px;
+    }
+
+    .title {
+        font-size: 20px;
+        text-decoration: none;
+        color: #16c6ff;
+    }
+
+    .title:hover {
+        color: #16c6ff;
+    }
+
+</style>
+
+<nav class="nav-container">
+    <a class="title" asp-area="" asp-controller="Home" asp-action="Index">
+        <i class="bi bi-map"></i> PreventApp
+    </a>
 </nav>
