@@ -15,6 +15,31 @@ namespace PreventApp.Services
             _context = context;
         }
 
+        public async Task CreateUser(CreateUserDTO user)
+        {
+            Usuario usuario = new()
+            {
+                Nombre = user.Nombre,
+                Email = user.Email,
+                Telefono = user.Telefono,
+                Contraseña = GetSHA256(user.Contraseña),
+                RolId = user.RolId
+            };
+
+            await _context.Usuarios.AddAsync(usuario);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsEmailRegistered(string email, int? id)
+        {
+            if(id != null )
+            {
+                return await _context.Usuarios.AnyAsync(u => u.Email == email && u.Id != id);
+            }
+
+            return await _context.Usuarios.AnyAsync(u => u.Email == email);
+        }
+
         public async Task<Paginacion<Usuario>> GetUsers(string filtro, int? numpag)
         {
             int cantidadRegistros = 20;
@@ -41,12 +66,10 @@ namespace PreventApp.Services
 
         public async Task DeleteUser(int? id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
-            {
-                _context.Usuarios.Remove(usuario);
-                await _context.SaveChangesAsync();
-            }
+            _context.Usuarios.Where(u => u.Id == id)
+                            .ExecuteUpdate(b => b
+                            .SetProperty(u => u.IsDeleted, true));
+            await _context.SaveChangesAsync();
         }
 
         public async Task<UserDashboardDTO?> GetSingleUser(int? id)
@@ -60,7 +83,6 @@ namespace PreventApp.Services
                     Nombre = usuario.Nombre,
                     Email = usuario.Email,
                     Telefono = usuario.Telefono,
-                    Contraseña = usuario.Contraseña,
                     RolId = usuario.RolId
                 };
                 return user;
@@ -70,17 +92,12 @@ namespace PreventApp.Services
 
         public async Task EditUser(UserDashboardDTO usuario)
         {
-            Usuario user = new()
-            {
-                Id = usuario.Id,
-                Nombre = usuario.Nombre,
-                Email = usuario.Email,
-                Telefono = usuario.Telefono,
-                Contraseña = GetSHA256(usuario.Contraseña),
-                RolId = usuario.RolId
-            };
-
-            _context.Update(user);
+            _context.Usuarios.Where(u => u.Id == usuario.Id)
+                             .ExecuteUpdate(b => b
+                                .SetProperty(u => u.Nombre, usuario.Nombre)
+                                .SetProperty(u => u.Email, usuario.Email)
+                                .SetProperty(u => u.Telefono, usuario.Telefono)
+                                .SetProperty(u => u.RolId, usuario.RolId));
             await _context.SaveChangesAsync();
         }
 
@@ -106,6 +123,31 @@ namespace PreventApp.Services
                              .ExecuteUpdate(b => b
                                 .SetProperty(u => u.Nombre, profile.Nombre)
                                 .SetProperty(u => u.Telefono, profile.Telefono));
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> EqualsCurrentPassword(string pass, int id)
+        {
+            var currentPass = await _context.Usuarios
+                                    .Select(u => new { u.Contraseña, u.Id})
+                                    .Where(u => u.Id == id)
+                                    .FirstOrDefaultAsync();
+
+            if(currentPass != null && currentPass.Contraseña == GetSHA256(pass))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task ChangePassword(int userId, string password)
+        {
+            password = GetSHA256(password);
+
+            _context.Usuarios.Where(u => u.Id == userId)
+                             .ExecuteUpdate(b => b
+                                .SetProperty(u => u.Contraseña, password));
             await _context.SaveChangesAsync();
         }
 

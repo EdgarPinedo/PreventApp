@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace PreventApp.DTOs
@@ -19,11 +20,6 @@ namespace PreventApp.DTOs
 
         [RegularExpression("^(?!0+$)(\\+\\d{1,3}[- ]?)?(?!0+$)\\d{10}$", ErrorMessage = "El telefono no es válido")]
         public string? Telefono { get; set; }
-
-        [Required]
-        [StringLength(8)]
-        [Unicode(false)]
-        public string Contraseña { get; set; } = null!;
 
         [Required]
         public int RolId { get; set; }

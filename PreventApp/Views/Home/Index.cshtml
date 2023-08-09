@@ -4,71 +4,77 @@
     ViewData["Title"] = "Inicio";
 }
 
-<style>
-    .leaflet-bar a {
-        background-color: rgb(33, 37, 41, .9);
-        color: #16c6ff;
-        border-bottom: 1px solid #000;
-    }
+@if (TempData["Success"] != null) {
+    <div class="alert-validation" id="validation">
+        <label class="alert-validation-success">@TempData["Success"]</label>       
+    </div>
+}
 
-    .leaflet-bar a.leaflet-disabled {
-        background-color: rgb(33, 37, 41, .9);
-    }
+@if (TempData["Failed"] != null)
+{
+    <div class="alert-validation" id="validation">
+        <label class="alert-validation-failed">@TempData["Failed"]</label>
+    </div>
+}
 
-    .leaflet-bar a:hover, .leaflet-bar a:focus {
-        background-color: rgb(0,0,0);
-    }
+<div class="home-container">
+    <input type="checkbox" id="open-left-panel" />
+    <div id="dk-1" class="darkdiv" onclick="CloseMenu()"></div>
+    <label for="open-left-panel" class="btn-left-panel">
+        <i class="bi bi-list menu-button-home" id="sidemenu-button" onclick="moveBtn()"></i>
+    </label>
 
-    .leaflet-container .leaflet-control-attribution {
-        background: rgba(33, 37, 41);
-    }
+    <div id="tabs-container" class="left-panel">
+        <ul class="tabs-list">
+            <li class="tab" onclick="filtrar(0)"><i class="bi bi-columns-gap"></i></li>
+            <li class="tab" onclick="filtrar(1)"><i class="bi bi-car-front-fill"></i></li>
+            <li class="tab" onclick="filtrar(2)"><i class="bi bi-fire"></i></li>
+            <li class="tab" onclick="filtrar(3)"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="30px" width="30px" viewBox="0 0 448 512"> <path d="M224 256c-57.2 0-105.6-37.5-122-89.3c-1.1 1.3-2.2 2.6-3.5 3.8c-15.8 15.8-38.8 20.7-53.6 22.1c-8.1 .8-14.6-5.7-13.8-13.8c1.4-14.7 6.3-37.8 22.1-53.6c5.8-5.8 12.6-10.1 19.6-13.4c-7-3.2-13.8-7.6-19.6-13.4C37.4 82.7 32.6 59.7 31.1 44.9c-.8-8.1 5.7-14.6 13.8-13.8c14.7 1.4 37.8 6.3 53.6 22.1c4.8 4.8 8.7 10.4 11.7 16.1C131.4 28.2 174.4 0 224 0c70.7 0 128 57.3 128 128s-57.3 128-128 128zM0 482.3C0 399.5 56.4 330 132.8 309.9c6-1.6 12.2 .9 15.9 5.8l62.5 83.3c6.4 8.5 19.2 8.5 25.6 0l62.5-83.3c3.7-4.9 9.9-7.4 15.9-5.8C391.6 330 448 399.5 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM160 96c-8.8 0-16 7.2-16 16s7.2 16 16 16H288c8.8 0 16-7.2 16-16s-7.2-16-16-16H160z" /></svg></></li>
+        </ul>
 
-    .leaflet-control-attribution, .leaflet-control-scale-line {
-        color: #D2D2D2;
-    }
+        <div class="tab-content">
+            <span id="span">Actualmente no hay alertas</span>
+            @foreach (var accident in Model)
+            {
+                <div class="tab-item tab-item-@accident.CategoriaId"
+                    onclick="travelTo(@accident.Latitud, @accident.Longitud)">
+                    <h5>@accident.Categoria.Nombre</h5>
+                    <p>@accident.Descripcion</p>
+                    <label>@accident.Latitud, @accident.Longitud</label>
+                </div>
+            }
+        </div>
+    </div>
 
-    .leaflet-container a {
-        color: #00dcff;
-    }
-</style>
-
-<div id="map" style="background-color: #f2efe9"></div>
-
-<header id="panel">
-    <partial name="_Navbar" />
-</header>
-
-<partial name="_UserMenu" />
-
-<div id="nuevaAlerta" onclick="alertaPopup()">
-    <i class="bi bi-pencil-square" style="font-size: 17px; color: #16c6ff;"></i>
+    <div id="map" class="map" style="background-color: #f2efe9"></div>
 </div>
 
-<div id="alert-container" class="alert-container">
-    <div class="panel-alert">
-        <h3 style="color: #16c6ff;">Enviar alerta</h3>
-        <form>
-            <label class="coor-label">
-                Haz clic sobre el mapa para obtener las coordenadas
-            </label>
-            <i class="bi bi-globe">&nbsp; Coordenadas</i>
-            <div class="coor-box">
-                <div class="lat-box">
-                    <label>Latitud:</label>
-                    <label class="lat-label" id="latitud"></label>
-                </div>
-                <div class="long-box">
-                    <label>Longitud:</label>
-                    <label class="long-label" id="longitud"></label>
-                </div>
-            </div>
-            <label style="font-size: 14px">Descripción del accidente o percance:</label>
-            <textarea placeholder="Escribe aquí..." id="text-a" class="text-area" required></textarea>
-            <div style="display: flex; justify-content: center">
-                <button type="submit" class="btn">Enviar</button>
-            </div>
-        </form>
-    </div>
+<div id="nuevaAlerta" onclick="alertaPopup()">
+    <i class="bi bi-pencil-square"></i>
+</div>
+
+<div id="alert-container" class="data-container">
+    <h3>Enviar alerta</h3>
+    <form asp-action="Index" method="post">
+        <input name="usuarioId" type="hidden" value="@User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
+            
+        <label class="coor-label">Haz clic sobre el mapa donde haya ocurrido el accidente</label>
+        <input id="latitud" name="latitud" type="hidden"/>
+        <input id="longitud" name="longitud" type="hidden"/>
+            
+        <label class="label-title">Selecciona el tipo de accidente</label>
+        <select name="categoriaId" class="row-select">
+            <option value="1">Accidente de tráfico</option>
+            <option value="2">Incendio</option>
+            <option value="3">Robo</option>
+        </select>
+            
+        <label class="label-title">Descripción del accidente o percance:</label>
+        <textarea placeholder="Escribe aquí..." id="text-a" class="row-value-area text-area" required name="descripcion"></textarea>
+        <div class="btn-container-form">
+            <button type="submit" class="common-btn">Enviar</button>
+        </div>
+    </form>
 </div>
 
 <script>
@@ -78,9 +84,29 @@
         document.getElementById("latitud").innerHTML = "";
         document.getElementById("longitud").innerHTML = "";
         document.getElementById("text-a").value = "";
+        removeMarker();
     }
-
+    var now = @Json.Serialize(DateTime.UtcNow.AddHours(-6));
+    now = new Date(now.slice(0, -1));
     var model = @Html.Raw(Json.Serialize(@Model));
-    console.log(model);
+
+    var clicked = 0;
+
+    function CloseMenu() {
+        document.getElementById("open-left-panel").checked = false;
+        document.getElementById("sidemenu-button").style.left = "0px";
+        clicked = 0;
+    }
+    
+    function moveBtn() {
+        if (clicked == 0) {
+            document.getElementById("sidemenu-button").style.left = "285px";
+            clicked = 1;
+        }
+        else {
+            document.getElementById("sidemenu-button").style.left = "0px";
+            clicked = 0;
+        }
+    }
 </script>
 <script src="~/js/map.js"></script>

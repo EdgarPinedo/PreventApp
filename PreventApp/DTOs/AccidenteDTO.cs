@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PreventApp.DTOs
 {
@@ -16,10 +18,19 @@ namespace PreventApp.DTOs
         [StringLength(280)]
         [Unicode(false)]
         public string Descripcion { get; set; } = null!;
-
+        
         public int? UsuarioId { get; set; }
 
         [Required]
         public int CategoriaId { get; set; }
+
+        [Column(TypeName = "numeric(20, 16)")]
+        public decimal? Longitud { get; set; }
+
+        [Column(TypeName = "numeric(20, 16)")]
+        public decimal? Latitud { get; set; }
+
+        [Required]
+        public bool Estado { get; set; }
     }
 }

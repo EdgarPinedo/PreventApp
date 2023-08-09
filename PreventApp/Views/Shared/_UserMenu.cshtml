@@ -3,38 +3,35 @@
 {
     @if (!User.Identity.IsAuthenticated)
     {
-        <a id="login-button" class="nav-link btn" asp-controller="Sesion" asp-action="Login">Iniciar sesión</a>
+        <a class="login-button nav-link btn" asp-controller="Auth" asp-action="Login">Iniciar sesión</a>
     }
     else
     {
-        <div id="menuUser" onclick="displayOptions()">
+        <div id="menuUser">
             <i class="bi bi-person-circle" style="font-size: 23px;"></i>
             <div id="popupOptions">
-                <div id="user">
+                <div class="user">
                     <i class="bi bi-person-circle" style="font-size: 23px;"></i>
                     @User.Identity.Name
                 </div>
-                <hr style="color: white" />
-                <a id="dropmenu" class="nav-link" asp-controller="Home" asp-action="Profile">
+                <hr />
+                <a class="dropmenu nav-link" asp-controller="User" asp-action="Profile">
                     <i class="bi bi-person"></i>
                         &nbsp; Tu perfil
                 </a>
-                @*@if (User.IsInRole("Usuario"))
-                {*@
-                <a id="dropmenu" class="nav-link" asp-controller="Home" asp-action="UserAlerts">
+                <a class="dropmenu nav-link" asp-controller="User" asp-action="Alerts">
                     <i class="bi bi-list-ul"></i>
                     &nbsp; Tus alertas
                 </a>
-                @*}*@
                 @if (User.IsInRole("Administrador"))
                 {
-                    <a id="dropmenu" class="nav-link" asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="todos">
+                    <a class="dropmenu nav-link" asp-controller="Dashboard" asp-action="Accidentes" asp-route-filtro="todos">
                         <i class="bi bi-card-list"></i>
                         &nbsp; Dashboard
                     </a>
                 }
-                <hr style="color: white" />
-                <a id="dropmenu" style="margin-bottom: 10px" class="nav-link" asp-controller="Home" asp-action="Logout">
+                <hr />
+                <a class="dropmenu nav-link" style="margin-bottom: 10px" asp-controller="Home" asp-action="Logout">
                     <i class="bi bi-box-arrow-right"></i>
                     &nbsp; Cerrar sesión
                 </a>
@@ -42,11 +39,21 @@
         </div>
     }
 }
-    
 
 <script>
-    function displayOptions() {
-        var popup = document.getElementById("popupOptions");
-        popup.classList.toggle("show");
+    var popup = document.getElementById("popupOptions");
+    var menuUser = document.getElementById("menuUser");
+
+    document.body.addEventListener('click', function () {
+        if (popup != null && popup.classList.contains("show")) {
+            popup.classList.toggle("show");
+        }
+    }, false);
+
+    if(menuUser != null) {
+        menuUser.addEventListener('click', function (e) {
+            popup.classList.toggle("show");
+            e.stopPropagation();
+        }, false);
     }
 </script>

@@ -1,23 +1,16 @@
 ﻿@using PreventApp.DTOs
-@model UserDashboardDTO
+@model CreateUserDTO
 
 @{
-    ViewData["Title"] = "Editar usuario";
+    ViewData["Title"] = "Crear usuario";
     Layout = "_DashboardLayout";
-}
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert-validation" id="validation">
-        <label class="alert-validation-success">@TempData["Success"]</label>
-    </div>
 }
 
 <div class="dashboard-container">
     <h1 class="main-title">Cuenta</h1>
-    <h5 class="subtitle">Editar los datos de la cuenta</h5>
+    <h5 class="subtitle">Crear una nueva cuenta</h5>
 
-    <form asp-action="EditUser" method="post" class="transparent-form">
+    <form asp-action="CreateUser" method="post" class="transparent-form">
 
         <div class="data-container">
             <h3>Información de la cuenta</h3>
@@ -27,13 +20,23 @@
             </div>
             <div class="row-data">
                 <label class="row-title">Email</label>
-                <input class="row-value" type="email" asp-for="@Model.Email" required />
+                <input class="row-value" type="email" asp-for="@Model.Email" autocomplete="off" required />
             </div>
             <div class="row-data">
                 <label class="row-title">Telefono</label>
                 <input class="row-value" asp-for="@Model.Telefono" />
             </div>
+            <div class="row-data">
+                <label class="row-title">Contraseña</label>
+                <input class="row-value" asp-for="@Model.Contraseña" autocomplete="new-password" required/>
+            </div>
+            <div class="row-data">
+                <label class="row-title">Confirmar contraseña</label>
+                <input class="row-value" asp-for="@Model.ConfirmarContraseña" required/>
+            </div>
             <span class="span span-validation" asp-validation-for="Telefono"></span>
+            <span class="span span-validation" asp-validation-for="Contraseña"></span>
+            <span class="span span-validation" asp-validation-for="ConfirmarContraseña"></span>
             <span class="span span-validation">@ViewData["EmailError"]</span>
         </div>
 
@@ -46,14 +49,6 @@
                     <option value="3">Administrador</option>
                 </select>
             </div>
-        </div>
-
-        <div class="data-container pass">
-            <h3>Contraseña</h3>
-            <a class="row-pass" asp-action="ChangePassword" asp-route-id="@Model.Id">
-                ••••••••
-                <i class="bi bi-chevron-right"></i>
-            </a>
         </div>
 
         <div id="btn-container">

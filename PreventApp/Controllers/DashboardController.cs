@@ -18,6 +18,28 @@ namespace PreventApp.Controllers
             _usersService = userService;
         }
 
+        public IActionResult CreateAccident()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAccident(AccidenteDTO accident)
+        {
+            if (accident.Estado == true)
+            {
+                if (accident.Latitud is null || accident.Longitud is null)
+                {
+                    ViewData["Invalido"] = "Imposible publicar sin una lozalización";
+                    return View();
+                }
+            }
+            TempData["Success"] = "Creado correctamente!";
+            await _accidentsService.CreateAccident(accident);
+            return RedirectToAction("Accidentes", new { filtro = "todos" });
+        }
+
         public async Task<IActionResult> Accidentes(string filtro, int? numpag)
         {
             ViewData["filtro"] = filtro;
@@ -28,53 +50,31 @@ namespace PreventApp.Controllers
         {
             if (id is null)
             {
-                return RedirectToAction("Accidentes");
+                return RedirectToAction("Accidentes", new { filtro = "todos" });
             }
 
             var accidente = await _accidentsService.Details(id);
             
             if (accidente == null)
             {
-                return RedirectToAction("Accidentes");
+                return RedirectToAction("Accidentes", new { filtro = "todos" });
             }
 
             return View(accidente);
         }
-
-        /*public IActionResult Create()
-        {
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Id");
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id");
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Fecha,Descripcion,UsuarioId,CategoriaId")] Accidente accidente)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(accidente);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Id", accidente.CategoriaId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id", accidente.UsuarioId);
-            return View(accidente);
-        }*/
 
         public async Task<IActionResult> EditAccident(int? id)
         {
             if (id is null)
             {
-                return RedirectToAction("Accidentes");
+                return RedirectToAction("Accidentes", new { filtro = "todos" });
             }
 
             var accidente = await _accidentsService.GetSingleAccident(id);
 
             if (accidente == null)
             {
-                return RedirectToAction("Accidentes");
+                return RedirectToAction("Accidentes", new { filtro = "todos" });
             }
 
             return View(accidente);
@@ -84,13 +84,18 @@ namespace PreventApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAccident(AccidenteDTO accidente)
         {
-            if (ModelState.IsValid)
+            if (accidente.Estado == true)
             {
-                await _accidentsService.EditAccident(accidente);
-                return RedirectToAction(nameof(Accidentes));
+                if (accidente.Latitud is null || accidente.Longitud is null)
+                {
+                    ViewData["Invalido"] = "Imposible publicar sin una lozalización";
+                    return View();
+                }
             }
-            
-            return View(accidente);
+
+            await _accidentsService.EditAccident(accidente);
+            TempData["Success"] = "Modificado correctamente!";
+            return RedirectToAction(nameof(Accidentes),  new { filtro = "todos" });
         }
 
         [HttpPost]
@@ -98,11 +103,36 @@ namespace PreventApp.Controllers
         public async Task<IActionResult> DeleteAccident(int? id)
         {
             await _accidentsService.DeleteAccident(id);
-            return RedirectToAction(nameof(Accidentes));
+            TempData["Success"] = "Eliminado correctamente!";
+            return RedirectToAction(nameof(Accidentes), new { filtro = "todos" });
         }
 
 
 
+
+        public IActionResult CreateUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(CreateUserDTO user)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(user);
+            }
+            
+            if(await _usersService.IsEmailRegistered(user.Email, null))
+            {
+                ViewData["EmailError"] = "Ya existe una cuenta con este email";
+                return View(user);
+            }
+
+            await _usersService.CreateUser(user);
+            TempData["Success"] = "Creado correctamente!";
+            return RedirectToAction(nameof(Users), new { filtro = "todos" });
+        }
 
         public async Task<IActionResult> Users(string filtro, int? numpag)
         {
@@ -140,7 +170,6 @@ namespace PreventApp.Controllers
             {
                 return RedirectToAction("Users", new { filtro = "todos" });
             }
-
             return View(user);
         }
 
@@ -148,13 +177,20 @@ namespace PreventApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(UserDashboardDTO usuario)
         {
-            if (ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
-                await _usersService.EditUser(usuario);
-                return RedirectToAction(nameof(Users), new { filtro = "todos" });
+                return View(usuario);
             }
 
-            return View(usuario);
+            if (await _usersService.IsEmailRegistered(usuario.Email, usuario.Id))
+            {
+                ViewData["EmailError"] = "Ya existe una cuenta con este email";
+                return View(usuario);
+            }
+
+            await _usersService.EditUser(usuario);
+            TempData["Success"] = "Modificado correctamente!";
+            return RedirectToAction(nameof(Users), new { filtro = "todos" });
         }
 
         [HttpPost]
@@ -162,7 +198,31 @@ namespace PreventApp.Controllers
         public async Task<IActionResult> DeleteUser(int? id)
         {
             await _usersService.DeleteUser(id);
+            TempData["Success"] = "Eliminado correctamente!";
             return RedirectToAction(nameof(Users), new { filtro = "todos" });
+        }
+
+        public IActionResult ChangePassword(int id)
+        {
+            ChangePasswordDTO newPass = new()
+            {
+                UserId = id,
+            };
+            return View(newPass);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO newPassword)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(newPassword);
+            }
+
+            await _usersService.ChangePassword(newPassword.UserId, newPassword.ContraseñaNueva);
+            TempData["Success"] = "Modificado correctamente!";
+            return RedirectToAction("EditUser", new { id = newPassword.UserId });
         }
     }
 }

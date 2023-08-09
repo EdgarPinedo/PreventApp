@@ -25,15 +25,37 @@ namespace PreventApp.Services
 
             if (filtro == "robos") accidentes = accidentes.Where(a => a.CategoriaId == 3);
 
-            if (filtro == "fallecimientos") accidentes = accidentes.Where(a => a.CategoriaId == 4);
-
-            accidentes = accidentes.Include(a => a.Categoria).Include(a => a.Usuario);
+            accidentes = accidentes.Include(a => a.Categoria).OrderByDescending(a => a.Fecha);
             return await Paginacion<Accidente>.Paginar(accidentes, numpag ?? 1, cantidadRegistros);
         }
 
         public async Task<List<Accidente>> GetRecentAccidents()
         {
-            return await _context.Accidentes.ToListAsync();
+            // -24 hrs(un día) + -6hrs(Ajuste de UTC a horario en Guadalajara) 
+            var oneDayAgo = DateTime.UtcNow.AddHours(-30);
+
+            return await _context.Accidentes
+                .Include(a => a.Categoria)
+                .OrderByDescending(a => a.Fecha)
+                .Where(a => a.Fecha > oneDayAgo && a.Estado == true)
+                .ToListAsync();
+        }
+
+        public async Task CreateAccident(AccidenteDTO accidente)
+        {
+            Accidente acc = new()
+            {
+                Id = accidente.Id,
+                Fecha = accidente.Fecha,
+                Descripcion = accidente.Descripcion,
+                UsuarioId = accidente.UsuarioId,
+                CategoriaId = accidente.CategoriaId,
+                Longitud = accidente.Longitud,
+                Latitud = accidente.Latitud,
+                Estado = accidente.Estado
+            };
+            await _context.Accidentes.AddAsync(acc);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Accidente?> Details(int? id)
@@ -65,7 +87,10 @@ namespace PreventApp.Services
                     Fecha = accidente.Fecha,
                     Descripcion = accidente.Descripcion,
                     UsuarioId = accidente.UsuarioId,
-                    CategoriaId = accidente.CategoriaId
+                    CategoriaId = accidente.CategoriaId,
+                    Longitud = accidente.Longitud,
+                    Latitud = accidente.Latitud,
+                    Estado = accidente.Estado
                 };
                 return acc;
             }
@@ -80,7 +105,10 @@ namespace PreventApp.Services
                 Fecha = accidente.Fecha,
                 Descripcion = accidente.Descripcion,
                 UsuarioId = accidente.UsuarioId,
-                CategoriaId = accidente.CategoriaId
+                CategoriaId = accidente.CategoriaId,
+                Longitud = accidente.Longitud,
+                Latitud = accidente.Latitud,
+                Estado = accidente.Estado
             };
 
             _context.Update(acc);
@@ -89,9 +117,29 @@ namespace PreventApp.Services
 
         public async Task<List<Accidente>> GetAccidentsByUser(int id)
         {
-            return await _context.Accidentes.Where(x => x.UsuarioId == id)
-                                            .Include(x => x.Categoria)
-                                            .ToListAsync();
+            return await _context.Accidentes
+                .Where(x => x.UsuarioId == id)
+                .Include(x => x.Categoria)
+                .OrderByDescending(a => a.Fecha)
+                .Take(20)
+                .ToListAsync();
+        }
+
+        public async Task AddAlert(AlertDTO alert)
+        {
+            Accidente acc = new()
+            {
+                Fecha = DateTime.UtcNow.AddHours(-6),
+                Descripcion = alert.Descripcion,
+                UsuarioId = alert.UsuarioId,
+                CategoriaId = alert.CategoriaId,
+                Longitud = alert.Longitud,
+                Latitud = alert.Latitud,
+                Estado = false
+            };
+            
+            await _context.AddAsync(acc);
+            await _context.SaveChangesAsync();
         }
     }
 }

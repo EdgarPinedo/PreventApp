@@ -5,47 +5,41 @@
     Layout = "_DashboardLayout";
 }
 
-<div id="accidentDetails">
-    <div class="details">
-        <h1>Detalles de usuario</h1>
-        <div class="detTitle">Usuario</div>
-        <div class="det">
-            <label class="name">Id</label>
-            <label class="value">@Model.Id</label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Nombre</label>
-            <label class="value">@Model.Nombre</label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Email</label>
-            <label class="value">@Model.Email</label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Telefono</label>
-            <label class="value">@Model.Telefono</label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Contraseña</label>
-            <label class="value">@Model.Contraseña</label>
-        </div>
+<div class="dashboard-container">
+    <h1 class="main-title">Cuenta</h1>
+    <h5 class="subtitle">Detalles del usuario y rol de la cuenta</h5>
 
-        <div class="detTitle">ROL</div>
-        <div class="det">
-            <label class="value" style="font-weight: bold;">
-                @Model.Rol.Nombre
-            </label>
+    <div class="data-container">
+        <h3>Información de la cuenta</h3>
+        <div class="row-data row-details">
+            <label class="row-title">Id</label>
+            <label class="row-value">@Model.Id</label>
         </div>
-
-        @*tabla de accidentes registrados por el usuario*@
-
-        <div id="actionsDetails">
-            <a class="buttons" asp-action="EditUser" asp-route-id="@Model.Id">Editar</a>
-            <a class="buttons" asp-action="Users" asp-route-filtro="todos">Regresar a la lista de usuarios</a>
+        <div class="row-data row-details">
+            <label class="row-title">Nombre</label>
+            <label class="row-value">@Model.Nombre</label>
         </div>
+        <div class="row-data row-details">
+            <label class="row-title">Email</label>
+            <label class="row-value">@Model.Email</label>
+        </div>
+        <div class="row-data row-details">
+            <label class="row-title">Telefono</label>
+            <label class="row-value">@Model.Telefono</label>
+        </div>
+    </div>
+
+    <div class="data-container">
+        <h3>Rol</h3>
+        <div class="row-single-value">
+            <label>@Model.Rol.Nombre</label>
+        </div>
+    </div>
+
+    @*tabla de accidentes registrados por el usuario*@
+
+    <div class="btn-container">
+        <a class="common-btn" asp-action="EditUser" asp-route-id="@Model.Id">Editar</a>
+        <button class="common-btn" onclick="history.back()">Regresar</button>
     </div>
 </div>

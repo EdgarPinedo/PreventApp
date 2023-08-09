@@ -2,7 +2,7 @@
 @model AccidenteDTO
 
 @{
-    ViewData["Title"] = "Editar";
+    ViewData["Title"] = "Crear";
     Layout = "_DashboardLayout";
 }
 
@@ -15,14 +15,15 @@
 
 <div class="dashboard-container">
     <h1 class="main-title">Accidente</h1>
-    <h5 class="subtitle">Editar los datos del accidente</h5>
+    <h5 class="subtitle">Crear una alerta de accidente</h5>
 
-    <form asp-action="EditAccident" method="post" class="transparent-form">
+    <form asp-action="CreateAccident" method="post" class="transparent-form">
+
         <div class="data-container">
             <h3>Información del accidente</h3>
-            
-            <input asp-for="@Model.Fecha" type="hidden" />
-            <input asp-for="@Model.UsuarioId" type="hidden" />
+
+            <input asp-for="@Model.Fecha" type="hidden" value="@DateTime.UtcNow.AddHours(-6)"/>
+            <input asp-for="@Model.UsuarioId" type="hidden" value="@User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
 
             <div class="row-single-data row-s-v-space">
                 <label class="row-title">Descripción</label>
@@ -37,7 +38,7 @@
             <input id="latitud" asp-for="@Model.Latitud" type="hidden"/>
             <input id="longitud" asp-for="@Model.Longitud" type="hidden"/>
         </div>
-        
+
         <div class="data-container">
             <h3>Categoría</h3>
             <div class="row-single-value">
@@ -68,7 +69,7 @@
 
 <script>
     var mapOptions = {
-        center: [20.6704414652116030, -103.3401489257812500],
+        center: [20.6696, -103.3405],
         zoom: 12,
         minZoom: 12,
         zoomControl: false,
@@ -87,16 +88,8 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    var latitud = document.getElementById("latitud").value;
-    var longitud = document.getElementById("longitud").value;
     var Marker;
     var onMap = 0;
-
-    if (latitud != "" && longitud != "") {
-        Marker = new L.marker([latitud, longitud], { draggable: true }).addTo(map);
-        onMap = 1;
-        map.setView([latitud, longitud], 12);
-    }
 
     map.on('click', function (e) {
         document.getElementById("latitud").value = e.latlng.lat;

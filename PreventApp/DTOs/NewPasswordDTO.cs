@@ -2,22 +2,22 @@
 
 namespace PreventApp.DTOs
 {
-    public class UsuarioDTO
+    public class NewPasswordDTO
     {
-        [Required]
-        [StringLength(50)]
-        [EmailAddress]
-        public string Email { get; set; } = null!;
+        [Required(ErrorMessage = "Rellena este campo")]
+        [StringLength(30)]
+        [DataType(DataType.Password)]
+        public string ContraseñaActual { get; set; } = null!;
 
         [Required(ErrorMessage = "Rellena este campo")]
         [StringLength(15, MinimumLength = 6, ErrorMessage = "La contraseña debe tener entre 6 y 15 caracteres")]
         [DataType(DataType.Password)]
-        public string Contraseña { get; set; } = null!;
-
+        public string ContraseñaNueva { get; set; } = null!;
+        
         [Required(ErrorMessage = "Rellena este campo")]
         [StringLength(15, MinimumLength = 6, ErrorMessage = "La contraseña debe tener entre 6 y 15 caracteres")]
         [DataType(DataType.Password)]
-        [Compare("Contraseña", ErrorMessage = "Los campos <Contraseña> y <Confirmar contraseña> deben ser iguales")]
-        public string? ConfirmarContraseña { get; set; }
+        [Compare("ContraseñaNueva", ErrorMessage = "Los campos <Contraseña nueva> y <Confirmar contraseña nueva> deben ser iguales")]
+        public string ConfirmarContraseñaNueva { get; set; } = null!;
     }
 }

@@ -77,7 +77,7 @@ namespace PreventApp.Services
             {
                 AllowRefresh = true,
                 IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10)
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
             };
 
             return (new ClaimsPrincipal(identity), properties);

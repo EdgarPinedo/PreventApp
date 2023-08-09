@@ -5,66 +5,86 @@
     Layout = "_DashboardLayout";
 }
 
-<div id="accidentDetails">
-    <div class="details">
-        <h1>Detalles de accidente</h1>
-        <div class="detTitle">ACCIDENTE</div>
-        <div class="det">
-            <label class="name">Id</label>
-            <label class="value">@Model.Id</label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Fecha</label>
-            <label class="value">@Model.Fecha</label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Descripcion</label>
-            <label class="value">@Model.Descripcion</label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Latitud</label>
-            <label class="value"></label>
-        </div>
-        <hr />
-        <div class="det">
-            <label class="name">Longitud</label>
-            <label class="value"></label>
-        </div>
+<div class="dashboard-container">
+    <h1 class="main-title">Accidente</h1>
+    <h5 class="subtitle">Detalles del accidente, categoría y origen/usuario</h5>
 
-        <div class="detTitle">CATEGORÍA</div>
-        <div class="det">
-            <label class="value" style="font-weight: bold;">
-                @Model.Categoria.Nombre
-            </label>
+    <div class="data-container">
+        <h3>Información del Accidente</h3>
+        <div class="row-data row-details">
+            <label class="row-title">Id</label>
+            <label class="row-value">@Model.Id</label>
         </div>
+        <div class="row-data row-details">
+            <label class="row-title">Fecha</label>
+            <label class="row-value">@Model.Fecha</label>
+        </div>
+        <div class="row-data row-details">
+            <label class="row-title">Descripción</label>
+            <label class="row-value">@Model.Descripcion</label>
+        </div>
+        <div class="row-data row-details">
+            <label class="row-title">Latitud</label>
+            <label class="row-value">@Model.Latitud</label>
+        </div>
+        <div class="row-data row-details">
+            <label class="row-title">Longitud</label>
+            <label class="row-value">@Model.Longitud</label>
+        </div>
+        <div class="row-data row-details">
+            <label class="row-title">Estado</label>
+            @if (Model.Estado == false)
+            {
+                <label class="row-value">Pendiente</label>
+            }
+            else
+            {
+                <label class="row-value">Publicado</label>
+            }
+        </div>
+    </div>
 
+    <div class="data-container">
+        <h3>Categoría</h3>
+        <div class="row-single-value">
+            <label>@Model.Categoria.Nombre</label>
+        </div>
+    </div>
+
+    <div class="data-container">
         @if (Model.Usuario is not null)
         {
-            <div class="detTitle">USUARIO</div>
-            <div class="det">
-                <label class="name">Id</label>
-                <label class="value">@Model.Usuario.Id</label>
+            <h3>Usuario</h3>
+            <div class="row-data row-details">
+                <label class="row-title">Id</label>
+                <label class="row-value">@Model.Usuario.Id</label>
             </div>
-            <hr />
-            <div class="det">
-                <label class="name">Email</label>
-                <label class="value">@Model.Usuario.Email</label>
+            <div class="row-data row-details">
+                <label class="row-title">Email</label>
+                <label class="row-value">@Model.Usuario.Email</label>
             </div>
         }
         else
         {
-            <div class="detTitle">ORIGEN</div>
-            <div class="det">
-                <label class="name">From Twitter</label>
-            </div>
+            if(Model.UsuarioId is not null)
+            {
+                <h3>Usuario</h3>
+                <div class="row-single-value">
+                    <label>Usuario eliminado</label>
+                </div>
+            } 
+            else
+            {
+                <h3>Origen</h3>
+                <div class="row-single-value">
+                    <label>Obtenido de Facebook</label>
+                </div>
+            }
         }
+    </div>
 
-        <div id="actionsDetails">
-            <a class="buttons" asp-action="EditAccident" asp-route-id="@Model.Id">Editar</a>
-            <a class="buttons" asp-action="Accidentes" asp-route-filtro="todos">Regresar a la lista de accidentes</a>
-        </div>
+    <div class="btn-container">
+        <a class="common-btn" asp-action="EditAccident" asp-route-id="@Model.Id">Editar</a>
+        <button class="common-btn" onclick="history.back()">Regresar</button>
     </div>
 </div>

@@ -1,0 +1,90 @@
+﻿@using PreventApp.DTOs;
+@model ProfileDTO
+
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-validation" id="validation">
+        <label class="alert-validation-success">@TempData["Success"]</label>
+    </div>
+}
+
+<div class="container-90">
+    
+    <h1 class="main-title">Mi perfil</h1>
+    <h5 class="subtitle">Información sobre ti y tu contacto</h5>
+    
+    <form class="data-container" method="post" asp-action="Profile">
+        <h3>Información básica</h3>
+
+        <div class="row-data">
+            <label class="row-title">Nombre</label>
+            <input asp-for="Nombre" />
+        </div>
+
+        <div class="row-data">
+            <label class="row-title">Telefono</label>
+            <input asp-for="Telefono"/>
+        </div>
+        <span class="span span-validation" asp-validation-for="Telefono"></span>
+        <div class="validation-state">
+            <button class="common-btn" type="submit">Guardar</button>
+            @if (ViewData["Actualizado"] != null)
+            {
+                <span id="Actualizado" style="margin-left: 15px;" class="alert-validation-success">@ViewData["Actualizado"]</span>
+            }
+        </div>
+        <input asp-for="Email" type="hidden"/>
+    </form>
+
+    <div class="data-container">
+        <h3>Información de contacto</h3>
+        <div class="row-single-data">
+            <label class="row-title">Email</label>
+            <label class="row-value">@Model.Email</label>
+        </div>
+    </div>
+
+    <div class="data-container pass">
+        <h3>Contraseña</h3>
+        <a class="row-pass" asp-action="ChangePassword">
+            ••••••••
+            <i class="bi bi-chevron-right"></i>
+        </a>
+    </div>
+
+    <div class="btn-container">
+        <button class="common-btn btn-outline-danger" onclick="ShowForm()">Eliminar tu cuenta</button>
+    </div>
+
+</div>
+
+<div id="dk-2" class="darkdiv remove-item" onclick="CloseForm()">
+    <form asp-action="DeleteAccount" class="data-container">
+        <h5 class="subtitle" style="margin-bottom:5px;">¿Realmente deseas eliminar tu cuenta?</h5>
+        <h6 class="subtitle">Esta acción es irreversible</h6>
+        <input type="hidden" name="id" id="input" value="@User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
+        <div class="container-buttons">
+            <button class="common-btn" type="submit">Eliminar</button>
+            <div class="btn common-btn" onclick="CloseForm()">Cancelar</div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function ShowForm() {
+        document.getElementById("dk-2").style.visibility = "visible";
+    }
+
+    function CloseForm() {
+        document.getElementById("dk-2").style.visibility = "hidden";
+    }
+
+    setTimeout(() => {
+        if(document.getElementById("Actualizado") != null)
+            document.getElementById("Actualizado").style.visibility = "hidden";
+    }, 3000);
+</script>

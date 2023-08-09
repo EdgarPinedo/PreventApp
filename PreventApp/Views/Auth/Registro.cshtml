@@ -4,33 +4,29 @@
 }
 @model UsuarioDTO
 
-<div id="fondo"></div>
-
-<header id="panel" style="background: #0d0f11">
-    <partial name="_Navbar" />
-</header>
-
-<div id="contenedor100">
-    <div id="login-register" style="height: 500px">
+<div class="fondo">
+    <div class="login-register" style="height: 550px">
         <div class="imagelogin"></div>
         <div class="form-box">
-            <h2 style="text-align:center">Registrarse</h2>
+            <h2 style="text-align:center" class="main-title">Registrarse</h2>
             <form asp-action="Registro" method="post">
                 <div class="input-box">
                     <i class="bi bi-envelope"></i>
                     <input asp-for="Email" required placeholder=" " />
                     <label>Correo electrónico</label>
+                    <span class="span span-validation" asp-validation-for="Email"></span>
                 </div>
                 <div class="input-box">
                     <i class="bi bi-lock"></i>
                     <input asp-for="Contraseña" required placeholder=" " />
                     <label>Contraseña</label>
+                    <span class="span span-validation" asp-validation-for="Contraseña"></span>
                 </div>
                 <div class="input-box">
                     <i class="bi bi-lock"></i>
-                    <input asp-for="ConfirmarContraseña" required placeholder=" " style="margin-bottom: 8px"/>
+                    <input asp-for="ConfirmarContraseña" required placeholder=" " style="margin-bottom: 8px" />
                     <label>Confirmar contraseña</label>
-                    <span asp-validation-for="ConfirmarContraseña" class="text-danger mb-4"></span>
+                    <span class="span span-validation" asp-validation-for="ConfirmarContraseña"></span>
                 </div>
                 @if (ViewData["ValidarRegistro"] != null)
                 {
@@ -47,3 +43,7 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelector(".login-button").classList.add("visually-hidden");
+</script>

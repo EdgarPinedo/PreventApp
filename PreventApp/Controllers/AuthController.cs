@@ -7,12 +7,12 @@ using System.Security.Claims;
 
 namespace PreventApp.Controllers
 {
-    public class SesionController : Controller
+    public class AuthController : Controller
     {
 
         private readonly AuthService _authService;
 
-        public SesionController(AuthService authService)
+        public AuthController(AuthService authService)
         {
             _authService = authService;
         }
@@ -33,7 +33,7 @@ namespace PreventApp.Controllers
         public async Task<IActionResult> Login(UsuarioDTO u)
         {
             var usuario = await _authService.FindUserAsync(u);
-
+   
             if (usuario is null)
             {
                 ViewData["ValidarLogin"] = "El correo o contraseña son incorrectos";
@@ -60,17 +60,15 @@ namespace PreventApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Registro(UsuarioDTO u)
         {
-            bool userExist = await _authService.UserExistAsync(u);
+            if(!ModelState.IsValid)
+            {
+                return View(u);
+            }
 
+            bool userExist = await _authService.UserExistAsync(u);
             if (userExist)
             {
                 ViewData["ValidarRegistro"] = "Ya existe una cuenta con este email";
-                return View();
-            }
-
-            if (u.Contraseña != u.ConfirmarContraseña)
-            {
-                ViewData["ValidarRegistro"] = "Las contraseñas no coinciden";
                 return View();
             }
 
