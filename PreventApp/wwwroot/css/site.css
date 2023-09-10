@@ -981,7 +981,7 @@ input:focus, textarea:focus {
     color: var(--text-red);
 }
 
-.Robo {
+.Semaforo {
     color: var(--text-orange);
 }
 
@@ -1141,7 +1141,7 @@ input:focus, textarea:focus {
 }
 
 .categoria1 .leaflet-popup-content-wrapper {
-    min-width: 320px;
+    min-width: 330px;
 }
 
 .categoria1 .leaflet-popup-content-wrapper, .categoria1 .leaflet-popup-tip {
@@ -1161,7 +1161,7 @@ input:focus, textarea:focus {
 }
 
 .categoria3 .leaflet-popup-content-wrapper {
-    min-width: 210px;
+    min-width: 340px;
 }
 
 .categoria3 .leaflet-popup-content-wrapper, .categoria3 .leaflet-popup-tip {

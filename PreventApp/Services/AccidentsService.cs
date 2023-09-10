@@ -23,7 +23,7 @@ namespace PreventApp.Services
 
             if (filtro == "incendios") accidentes = accidentes.Where(a => a.CategoriaId == 2);
 
-            if (filtro == "robos") accidentes = accidentes.Where(a => a.CategoriaId == 3);
+            if (filtro == "semaforos") accidentes = accidentes.Where(a => a.CategoriaId == 3);
 
             accidentes = accidentes.Include(a => a.Categoria).OrderByDescending(a => a.Fecha);
             return await Paginacion<Accidente>.Paginar(accidentes, numpag ?? 1, cantidadRegistros);
@@ -111,8 +111,13 @@ namespace PreventApp.Services
                 Estado = accidente.Estado
             };
 
-            _context.Update(acc);
-            await _context.SaveChangesAsync();
+            var exists = await _context.Accidentes.AnyAsync(m => m.Id == accidente.Id);
+
+            if (exists)
+            {
+                _context.Update(acc);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<List<Accidente>> GetAccidentsByUser(int id)

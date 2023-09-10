@@ -48,8 +48,6 @@ namespace PreventApp.Services
 
             if (filtro == "usuarios") usuarios = usuarios.Where(a => a.RolId == 1);
 
-            if (filtro == "instituciones") usuarios = usuarios.Where(a => a.RolId == 2);
-
             if (filtro == "administradores") usuarios = usuarios.Where(a => a.RolId == 3);
 
             usuarios = usuarios.Include(a => a.Rol);

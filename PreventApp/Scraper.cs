@@ -84,8 +84,7 @@ namespace PreventApp
                 }*/
 
                 data.Clear();
-                /*await Task.Delay(600000, stoppingToken);*/
-                await Task.Delay(60000, stoppingToken);
+                await Task.Delay(600000, stoppingToken);
             }
         }
     }

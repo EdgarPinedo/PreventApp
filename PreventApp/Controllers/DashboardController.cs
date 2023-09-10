@@ -31,7 +31,7 @@ namespace PreventApp.Controllers
             {
                 if (accident.Latitud is null || accident.Longitud is null)
                 {
-                    ViewData["Invalido"] = "Imposible publicar sin una lozalización";
+                    ViewData["Invalido"] = "Imposible publicar sin una localización";
                     return View();
                 }
             }
@@ -88,7 +88,7 @@ namespace PreventApp.Controllers
             {
                 if (accidente.Latitud is null || accidente.Longitud is null)
                 {
-                    ViewData["Invalido"] = "Imposible publicar sin una lozalización";
+                    ViewData["Invalido"] = "Imposible publicar sin una localización";
                     return View();
                 }
             }

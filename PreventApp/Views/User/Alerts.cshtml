@@ -30,6 +30,8 @@
                             var cat = "";
                             if (item.Categoria.Nombre == "Accidente de tráfico")
                                 cat = "Trafico";
+                            else if (item.Categoria.Nombre == "Semáforo")
+                                cat = "Semaforo";
                             else
                                 cat = item.Categoria.Nombre;
                         }
